@@ -1,2 +1,2 @@
 from .src import APIObject
-from .src import nesteddict
+from .src import nested_dict_get
