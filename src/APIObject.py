@@ -26,7 +26,8 @@ class APIObject():
         return json.dumps(
             self.to_dict(self, ignore_keys=ignore_keys),
             sort_keys=False,
-            indent=4
+            indent=4,
+            stop_recursion=True,
         )
 
     def __getitem__(self, name: str) -> any:
@@ -38,7 +39,7 @@ class APIObject():
         return getattr(self, name)
 
     @staticmethod
-    def to_dict(obj, ignore_keys=tuple([]), date_format="%Y-%m-%d"):
+    def to_dict(obj, ignore_keys=tuple([]), date_format="%Y-%m-%d", stop_recursion=False):
         """
         Converts an instance of any class into a dictionary recursively. Private attributes, whose name starting with
         an underscore, are ignored. Further, the key names specified under "ignore_keys" are also not being considered.
@@ -46,10 +47,14 @@ class APIObject():
         :param obj: Any object that shall be converted to a dictionary
         :param ignore_keys:
         :param date_format:
+        :param stop_recursion: Indicates that call to .json() shall be made prevented due to recursion
         :return:
         """
         recall = lambda o: APIObject.to_dict(o, ignore_keys=ignore_keys, date_format=date_format)
         valid_entry = lambda k, v: not callable(v) and not k.startswith('_') and k not in ignore_keys
+        # Call .json() for APIObjects
+        if not stop_recursion and isinstance(obj, APIObject):
+            return obj.json()
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
