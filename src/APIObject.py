@@ -9,25 +9,27 @@ class APIObject():
     into a JSON or directly saved to a noSQL database.
     """
 
-    def as_dict(self: Tuple[str] = tuple([])) -> dict:
+    def as_dict(self, ignore_keys=tuple([]), date_format="%Y-%m-%d") -> dict:
         """
-        Calls static method and returns dictionary that represents current instance
-        :param ignore_keys: List of keys that will be ignored when converting instance to dictionary
-        :return: Instance as dict
+        Converts an instance of any class into a dictionary recursively. Private attributes, whose name starting with
+        an underscore, are ignored. Further, the key names specified under "ignore_keys" are also not being considered.
+        Dates are converted into strins following the specified syntax.
+        :param ignore_keys: Keys that shall be ignored during conversion
+        :param date_format: String format into which dates shall be converted
         """
-        return APIObject.to_dict(self)
+        return APIObject.to_dict(self, ignore_keys=ignore_keys, date_format=date_format, stop_recursion=True)
 
-    def json(self, ignore_keys: Tuple[str] = tuple([])) -> str:
+    def json(self, ignore_keys: Tuple[str] = tuple([]), date_format="%Y-%m-%d") -> str:
         """
         Create string representation of current instance that can be sent as JSON object
         :param ignore_keys: List of keys that will be ignored when converting instance to dictionary
-        :return: instance as dict
+        :param date_format: String format into which dates shall be converted
+        :return: instance as json string
         """
         return json.dumps(
-            self.to_dict(self, ignore_keys=ignore_keys),
+            self.as_dict(ignore_keys=ignore_keys, date_format=date_format),
             sort_keys=False,
             indent=4,
-            stop_recursion=True,
         )
 
     def __getitem__(self, name: str) -> any:
@@ -45,8 +47,8 @@ class APIObject():
         an underscore, are ignored. Further, the key names specified under "ignore_keys" are also not being considered.
         Datees are converted into strins following the specified syntax.
         :param obj: Any object that shall be converted to a dictionary
-        :param ignore_keys:
-        :param date_format:
+        :param ignore_keys: Keys that shall be ignored during conversion
+        :param date_format: String format into which dates shall be converted
         :param stop_recursion: Indicates that call to .json() shall be made prevented due to recursion
         :return:
         """
@@ -54,7 +56,7 @@ class APIObject():
         valid_entry = lambda k, v: not callable(v) and not k.startswith('_') and k not in ignore_keys
         # Call .json() for APIObjects
         if not stop_recursion and isinstance(obj, APIObject):
-            return obj.as_dict()
+            return obj.as_dict(ignore_keys=ignore_keys, date_format=date_format)
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
