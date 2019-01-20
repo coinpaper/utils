@@ -54,7 +54,7 @@ class APIObject():
         valid_entry = lambda k, v: not callable(v) and not k.startswith('_') and k not in ignore_keys
         # Call .json() for APIObjects
         if not stop_recursion and isinstance(obj, APIObject):
-            return obj.json()
+            return obj.as_dict()
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
