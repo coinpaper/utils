@@ -23,7 +23,7 @@ def add_dates_to_weekly_list(weekly_list: List, key_name: str) -> List[Dict]:
         start_date += timedelta(weeks=1)
     return list_with_dates
 
-def list_values_only(cls, list_with_dates: List[Dict]) -> List[int]:
+def list_values_only(list_with_dates: List[Dict]) -> List[int]:
     """
     Simplifies a list of dicts containing a date and a value to values only
     :param list_with_dates: List containing Dicts with dates and values
