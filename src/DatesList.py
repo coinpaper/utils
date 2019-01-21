@@ -1,3 +1,8 @@
+from typing import List, Dict
+
+from datetime import datetime, timedelta
+
+
 def add_dates_to_weekly_list(weekly_list: List, key_name: str) -> List[Dict]:
     """
     Converts a list of values to a list of dicts with a date string
