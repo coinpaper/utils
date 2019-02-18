@@ -213,3 +213,4 @@ fabric.properties
 # temporary repo folders for code analysis
 .repos/
 .repos
+.savedata

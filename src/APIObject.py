@@ -1,6 +1,8 @@
 from typing import Tuple
 import json
 from datetime import datetime
+import pickle
+import os
 
 
 class APIObject():
@@ -8,6 +10,31 @@ class APIObject():
     An API Object can be converted to a dictionary consisting of only primitives which can then be converted
     into a JSON or directly saved to a noSQL database.
     """
+
+    basepath = ".savedata"
+
+    def objectid(self):
+        return "default"
+
+    def _save_path(self):
+        classname = self.__class__.__name__.lower()
+        object_id = self.objectid()
+        head, tail = os.path.normpath(f"./{self.basepath}/{classname}"), os.path.normpath(f"{object_id}.pickle")
+        return head, tail, os.path.join(head, tail)
+
+    def save(self):
+        head, tail, save_path = self._save_path()
+        if not os.path.exists(head):
+            os.makedirs(head)
+        with open(save_path, 'wb') as handle:
+            pickle.dump(self, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    @classmethod
+    def load(cls, object_id):
+        classname = cls.__name__.lower()
+        picklepath = f"./{cls.basepath}/{classname}/{object_id}.pickle"
+        with open(picklepath, 'rb') as handle:
+            return pickle.load(handle)
 
     def as_dict(self, ignore_keys=tuple([]), date_format="%Y-%m-%d") -> dict:
         """
