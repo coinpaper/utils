@@ -1,4 +1,4 @@
-from src.APICoin import APICoin
+from src import APICoin
 
 
 class TestCoinInfo(APICoin):
