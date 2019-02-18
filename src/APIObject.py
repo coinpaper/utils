@@ -12,6 +12,7 @@ class APIObject():
     """
 
     basepath = ".savedata"
+    static = ".static"
 
     def objectid(self):
         return "default"
