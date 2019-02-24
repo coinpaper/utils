@@ -6,7 +6,13 @@ class TestCoinInfo(APICoin):
     def __init__(self):
         super().__init__("test-id", "Testcoin", "TST")
         self.visible_value = 1
+        self.multiline_string = """
+        some
+        'multiline'
+        string
+        """
         self._invisible_value = 2
+
 
 
 if __name__ == "__main__":
