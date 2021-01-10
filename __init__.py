@@ -1,1 +1,1 @@
-from src import APIObject
+from src.APIObject import APIObject
