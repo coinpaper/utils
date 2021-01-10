@@ -50,17 +50,20 @@ class APIObject():
         """
         recall = lambda o: APIObject.to_dict(o, ignore_keys=ignore_keys, date_format=date_format)
         valid_entry = lambda k, v: not callable(v) and not k.startswith('_') and k not in ignore_keys
+        # Convert other APIObjects
+        if isinstance(obj, APIObject):
+            return obj.json()
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
+            # Convert dict-like objects
+        if isinstance(obj, dict) or hasattr(obj, "__dict__"):
+            return dict([(key, recall(value)) for key, value in obj.__dict__.items() if valid_entry(key, value)])
         # Convert abstract syntax trees
         if hasattr(obj, "_ast"):
             return recall(obj._ast())
         # Convert Iterables
         if hasattr(obj, "__iter__") and not isinstance(obj, str):
             return [recall(v) for v in obj]
-        # Convert dict-like objects
-        if isinstance(obj, dict) or hasattr(obj, "__dict__"):
-            return dict([(key, recall(value)) for key, value in obj.__dict__.items() if valid_entry(key, value)])
         # Base case
         return obj
