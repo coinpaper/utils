@@ -53,9 +53,12 @@ class APIObject():
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
-            # Convert dict-like objects
-        if isinstance(obj, dict) or hasattr(obj, "__dict__"):
+        # Convert class objects
+        if hasattr(obj, "__dict__"):
             return dict([(key, recall(value)) for key, value in obj.__dict__.items() if valid_entry(key, value)])
+        # Convert objects
+        if isinstance(obj, dict):
+            return dict([(key, recall(value)) for key, value in obj.items() if valid_entry(key, value)])
         # Convert abstract syntax trees
         if hasattr(obj, "_ast"):
             return recall(obj._ast())
