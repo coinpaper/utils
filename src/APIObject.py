@@ -50,9 +50,6 @@ class APIObject():
         """
         recall = lambda o: APIObject.to_dict(o, ignore_keys=ignore_keys, date_format=date_format)
         valid_entry = lambda k, v: not callable(v) and not k.startswith('_') and k not in ignore_keys
-        # Convert other APIObjects
-        if isinstance(obj, APIObject):
-            return obj.json()
         # Convert dates to strings
         if isinstance(obj, datetime):
             return obj.strftime(date_format)
