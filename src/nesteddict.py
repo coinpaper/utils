@@ -11,10 +11,10 @@ def nested_dict_get(data: Dict, *path, default=None, as_type=None):
     :return: Datapoint behind path
     """
     for key in path:
-            try:
-                data = data[key]
-            except KeyError:
-                return default
+        try:
+            data = data[key]
+        except KeyError:
+            return default
     if data is None:
         return default
     if as_type:
