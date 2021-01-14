@@ -1,2 +1,3 @@
 from .APIObject import APIObject
-from .nesteddict import nested_dict_get
+from .NestedDict import nested_dict_get
+from .ImageCompressor import compress_image
