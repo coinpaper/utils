@@ -100,5 +100,7 @@ class APIObject():
         # Convert Iterables
         if hasattr(obj, "__iter__") and not isinstance(obj, str):
             return [recall(v) for v in obj]
+        if isinstance(obj, str):
+            return json.dumps(obj)[1:-1]
         # Base case
         return obj
