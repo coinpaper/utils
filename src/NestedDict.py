@@ -13,7 +13,7 @@ def nested_dict_get(data: Dict, *path, default=None, as_type=None):
     for key in path:
         try:
             data = data[key]
-        except KeyError:
+        except (KeyError, TypeError):
             return default
     if data is None:
         return default
